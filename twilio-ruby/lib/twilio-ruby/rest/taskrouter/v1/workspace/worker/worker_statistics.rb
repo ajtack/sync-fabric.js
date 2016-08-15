@@ -16,7 +16,6 @@ module Twilio
               # @param [Version] version Version that contains the resource
               # @param [String] workspace_sid The workspace_sid
               # @param [String] worker_sid The worker_sid
-              
               # @return [WorkerStatisticsList] WorkerStatisticsList
               def initialize(version, workspace_sid: nil, worker_sid: nil)
                 super(version)
@@ -43,7 +42,6 @@ module Twilio
               # @param [Hash] solution Path solution for the resource
               # @param [String] workspace_sid The workspace_sid
               # @param [String] worker_sid The worker_sid
-              
               # @return [WorkerStatisticsPage] WorkerStatisticsPage
               def initialize(version, response, solution)
                 super(version, response)
@@ -55,14 +53,13 @@ module Twilio
               ##
               # Build an instance of WorkerStatisticsInstance
               # @param [Hash] payload Payload response from the API
-              
               # @return [WorkerStatisticsInstance] WorkerStatisticsInstance
               def get_instance(payload)
                 return WorkerStatisticsInstance.new(
                     @version,
                     payload,
-                    workspace_sid: @solution['workspace_sid'],
-                    worker_sid: @solution['worker_sid'],
+                    workspace_sid: @solution[:workspace_sid],
+                    worker_sid: @solution[:worker_sid],
                 )
               end
               
@@ -79,7 +76,6 @@ module Twilio
               # @param [Version] version Version that contains the resource
               # @param [String] workspace_sid The workspace_sid
               # @param [String] worker_sid The worker_sid
-              
               # @return [WorkerStatisticsContext] WorkerStatisticsContext
               def initialize(version, workspace_sid, worker_sid)
                 super(version)
@@ -97,7 +93,6 @@ module Twilio
               # @param [String] minutes The minutes
               # @param [Time] start_date The start_date
               # @param [Time] end_date The end_date
-              
               # @return [WorkerStatisticsInstance] Fetched WorkerStatisticsInstance
               def fetch(minutes: nil, start_date: nil, end_date: nil)
                 params = {
@@ -115,8 +110,8 @@ module Twilio
                 return WorkerStatisticsInstance.new(
                     @version,
                     payload,
-                    workspace_sid: @solution['workspace_sid'],
-                    worker_sid: @solution['worker_sid'],
+                    workspace_sid: @solution[:workspace_sid],
+                    worker_sid: @solution[:worker_sid],
                 )
               end
               
@@ -135,7 +130,6 @@ module Twilio
               # @param [Hash] payload payload that contains response from Twilio
               # @param [String] workspace_sid The workspace_sid
               # @param [String] worker_sid The worker_sid
-              
               # @return [WorkerStatisticsInstance] WorkerStatisticsInstance
               def initialize(version, payload, workspace_sid: nil, worker_sid: nil)
                 super(version)
@@ -160,7 +154,6 @@ module Twilio
               # Generate an instance context for the instance, the context is capable of
               # performing various actions.  All instance actions are proxied to the context
               # @param [Version] version Version that contains the resource
-              
               # @return [WorkerStatisticsContext] WorkerStatisticsContext for this WorkerStatisticsInstance
               def context
                 unless @instance_context
@@ -194,10 +187,10 @@ module Twilio
               # @param [String] minutes The minutes
               # @param [Time] start_date The start_date
               # @param [Time] end_date The end_date
-              
               # @return [WorkerStatisticsInstance] Fetched WorkerStatisticsInstance
               def fetch(minutes: nil, start_date: nil, end_date: nil)
-                @context.fetch(
+                context.fetch(
+                    minutes: minutes,
                     start_date: start_date,
                     end_date: end_date,
                 )
@@ -206,8 +199,8 @@ module Twilio
               ##
               # Provide a user friendly representation
               def to_s
-                context = @params.map{|k, v| "#{k}: #{v}"}.join(" ")
-                "<Twilio.Taskrouter.V1.WorkerStatisticsInstance #{context}>"
+                values = @params.map{|k, v| "#{k}: #{v}"}.join(" ")
+                "<Twilio.Taskrouter.V1.WorkerStatisticsInstance #{values}>"
               end
             end
           end

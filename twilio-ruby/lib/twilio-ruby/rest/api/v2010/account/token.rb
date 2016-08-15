@@ -15,7 +15,6 @@ module Twilio
             # @param [Version] version Version that contains the resource
             # @param [String] account_sid The unique id of the Account that created this
             #   Token.
-            
             # @return [TokenList] TokenList
             def initialize(version, account_sid: nil)
               super(version)
@@ -32,7 +31,6 @@ module Twilio
             # Request is executed immediately.
             # @param [String] ttl The duration in seconds for which the generated credentials
             #   are valid
-            
             # @return [TokenInstance] Newly created TokenInstance
             def create(ttl: nil)
               data = {
@@ -48,7 +46,7 @@ module Twilio
               return TokenInstance.new(
                   @version,
                   payload,
-                  account_sid: @solution['account_sid'],
+                  account_sid: @solution[:account_sid],
               )
             end
             
@@ -67,7 +65,6 @@ module Twilio
             # @param [Hash] solution Path solution for the resource
             # @param [String] account_sid The unique id of the Account that created this
             #   Token.
-            
             # @return [TokenPage] TokenPage
             def initialize(version, response, solution)
               super(version, response)
@@ -79,13 +76,12 @@ module Twilio
             ##
             # Build an instance of TokenInstance
             # @param [Hash] payload Payload response from the API
-            
             # @return [TokenInstance] TokenInstance
             def get_instance(payload)
               return TokenInstance.new(
                   @version,
                   payload,
-                  account_sid: @solution['account_sid'],
+                  account_sid: @solution[:account_sid],
               )
             end
             
@@ -103,7 +99,6 @@ module Twilio
             # @param [Hash] payload payload that contains response from Twilio
             # @param [String] account_sid The unique id of the Account that created this
             #   Token.
-            
             # @return [TokenInstance] TokenInstance
             def initialize(version, payload, account_sid: nil)
               super(version)

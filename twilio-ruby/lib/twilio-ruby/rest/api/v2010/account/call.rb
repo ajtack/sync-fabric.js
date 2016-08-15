@@ -15,7 +15,6 @@ module Twilio
             # @param [Version] version Version that contains the resource
             # @param [String] account_sid The unique id of the Account responsible for
             #   creating this Call
-            
             # @return [CallList] CallList
             def initialize(version, account_sid: nil)
               super(version)
@@ -67,15 +66,16 @@ module Twilio
             # @param [Boolean] record Set this parameter to true to record the entirety of a
             #   phone call. The RecordingUrl will be sent to the StatusCallback URL. Defaults to
             #   false.
+            # @param [String] sip_auth_username The sip_auth_username
+            # @param [String] sip_auth_password The sip_auth_password
             # @param [String] url The fully qualified URL that should be consulted when the
             #   call connects. Just like when you set a URL on a phone number for handling
             #   inbound calls.
             # @param [String] application_sid The 34 character sid of the application Twilio
             #   should use to handle this phone call. If this parameter is present, Twilio will
             #   ignore all of the voice URLs passed and use the URLs set on the application.
-            
             # @return [CallInstance] Newly created CallInstance
-            def create(to: nil, from: nil, method: nil, fallback_url: nil, fallback_method: nil, status_callback: nil, status_callback_method: nil, send_digits: nil, if_machine: nil, timeout: nil, record: nil, url: nil, application_sid: nil)
+            def create(to: nil, from: nil, method: nil, fallback_url: nil, fallback_method: nil, status_callback: nil, status_callback_method: nil, send_digits: nil, if_machine: nil, timeout: nil, record: nil, sip_auth_username: nil, sip_auth_password: nil, url: nil, application_sid: nil)
               data = {
                   'To' => to,
                   'From' => from,
@@ -90,6 +90,8 @@ module Twilio
                   'IfMachine' => if_machine,
                   'Timeout' => timeout,
                   'Record' => record,
+                  'SipAuthUsername' => sip_auth_username,
+                  'SipAuthPassword' => sip_auth_password,
               }
               
               payload = @version.create(
@@ -101,7 +103,7 @@ module Twilio
               return CallInstance.new(
                   @version,
                   payload,
-                  account_sid: @solution['account_sid'],
+                  account_sid: @solution[:account_sid],
               )
             end
             
@@ -126,7 +128,6 @@ module Twilio
             #  the default value of 50 records.  If no page_size is                      defined
             #  but a limit is defined, stream() will attempt to read                      the
             #  limit with the most efficient page size,                      i.e. min(limit, 1000)
-            
             # @return [Array] Array of up to limit results
             def list(to: nil, from: nil, parent_call_sid: nil, status: nil, start_time_before: nil, start_time: nil, start_time_after: nil, end_time_before: nil, end_time: nil, end_time_after: nil, limit: nil, page_size: nil)
               self.stream(
@@ -166,7 +167,6 @@ module Twilio
             #  the default value of 50 records.                      If no page_size is defined
             #                       but a limit is defined, stream() will attempt to                      read the
             #  limit with the most efficient page size,                       i.e. min(limit, 1000)
-            
             # @return [Enumerable] Enumerable that will yield up to limit results
             def stream(to: nil, from: nil, parent_call_sid: nil, status: nil, start_time_before: nil, start_time: nil, start_time_after: nil, end_time_before: nil, end_time: nil, end_time_after: nil, limit: nil, page_size: nil)
               limits = @version.read_limits(limit, page_size)
@@ -238,7 +238,6 @@ module Twilio
             # @param [String] page_token PageToken provided by the API
             # @param [Integer] page_number Page Number, this value is simply for client state
             # @param [Integer] page_size Number of records to return, defaults to 50
-            
             # @return [Page] Page of CallInstance
             def page(to: nil, from: nil, parent_call_sid: nil, status: nil, start_time_before: nil, start_time: nil, start_time_after: nil, end_time_before: nil, end_time: nil, end_time_after: nil, page_token: nil, page_number: nil, page_size: nil)
               params = {
@@ -267,7 +266,6 @@ module Twilio
             ##
             # Access the feedback_summaries
             # @param [String] sid The sid
-            
             # @return [FeedbackSummaryList] FeedbackSummaryList
             def feedback_summaries(sid=:unset)
               if sid != :unset
@@ -299,7 +297,6 @@ module Twilio
             # @param [Hash] solution Path solution for the resource
             # @param [String] account_sid The unique id of the Account responsible for
             #   creating this Call
-            
             # @return [CallPage] CallPage
             def initialize(version, response, solution)
               super(version, response)
@@ -311,13 +308,12 @@ module Twilio
             ##
             # Build an instance of CallInstance
             # @param [Hash] payload Payload response from the API
-            
             # @return [CallInstance] CallInstance
             def get_instance(payload)
               return CallInstance.new(
                   @version,
                   payload,
-                  account_sid: @solution['account_sid'],
+                  account_sid: @solution[:account_sid],
               )
             end
             
@@ -334,7 +330,6 @@ module Twilio
             # @param [Version] version Version that contains the resource
             # @param [String] account_sid The account_sid
             # @param [String] sid The Call Sid that uniquely identifies the Call to fetch
-            
             # @return [CallContext] CallContext
             def initialize(version, account_sid, sid)
               super(version)
@@ -374,8 +369,8 @@ module Twilio
               return CallInstance.new(
                   @version,
                   payload,
-                  account_sid: @solution['account_sid'],
-                  sid: @solution['sid'],
+                  account_sid: @solution[:account_sid],
+                  sid: @solution[:sid],
               )
             end
             
@@ -397,7 +392,6 @@ module Twilio
             #   ends to notify your app.
             # @param [String] status_callback_method The HTTP method that Twilio should use to
             #   request the `StatusCallback`. Defaults to `POST`.
-            
             # @return [CallInstance] Updated CallInstance
             def update(url: nil, method: nil, status: nil, fallback_url: nil, fallback_method: nil, status_callback: nil, status_callback_method: nil)
               data = {
@@ -419,8 +413,8 @@ module Twilio
               return CallInstance.new(
                   @version,
                   payload,
-                  account_sid: @solution['account_sid'],
-                  sid: @solution['sid'],
+                  account_sid: @solution[:account_sid],
+                  sid: @solution[:sid],
               )
             end
             
@@ -499,7 +493,6 @@ module Twilio
             # @param [String] account_sid The unique id of the Account responsible for
             #   creating this Call
             # @param [String] sid The Call Sid that uniquely identifies the Call to fetch
-            
             # @return [CallInstance] CallInstance
             def initialize(version, payload, account_sid: nil, sid: nil)
               super(version)
@@ -545,7 +538,6 @@ module Twilio
             # Generate an instance context for the instance, the context is capable of
             # performing various actions.  All instance actions are proxied to the context
             # @param [Version] version Version that contains the resource
-            
             # @return [CallContext] CallContext for this CallInstance
             def context
               unless @instance_context
@@ -662,14 +654,14 @@ module Twilio
             # Deletes the CallInstance
             # @return [Boolean] true if delete succeeds, true otherwise
             def delete
-              @context.delete()
+              context.delete
             end
             
             ##
             # Fetch a CallInstance
             # @return [CallInstance] Fetched CallInstance
             def fetch
-              @context.fetch()
+              context.fetch
             end
             
             ##
@@ -690,10 +682,10 @@ module Twilio
             #   ends to notify your app.
             # @param [String] status_callback_method The HTTP method that Twilio should use to
             #   request the `StatusCallback`. Defaults to `POST`.
-            
             # @return [CallInstance] Updated CallInstance
             def update(url: nil, method: nil, status: nil, fallback_url: nil, fallback_method: nil, status_callback: nil, status_callback_method: nil)
-              @context.update(
+              context.update(
+                  url: url,
                   method: method,
                   status: status,
                   fallback_url: fallback_url,
@@ -707,28 +699,28 @@ module Twilio
             # Access the recordings
             # @return [recordings] recordings
             def recordings
-              @context.recordings
+              context.recordings
             end
             
             ##
             # Access the notifications
             # @return [notifications] notifications
             def notifications
-              @context.notifications
+              context.notifications
             end
             
             ##
             # Access the feedback
             # @return [feedback] feedback
             def feedback
-              @context.feedback
+              context.feedback
             end
             
             ##
             # Provide a user friendly representation
             def to_s
-              context = @params.map{|k, v| "#{k}: #{v}"}.join(" ")
-              "<Twilio.Api.V2010.CallInstance #{context}>"
+              values = @params.map{|k, v| "#{k}: #{v}"}.join(" ")
+              "<Twilio.Api.V2010.CallInstance #{values}>"
             end
           end
         end

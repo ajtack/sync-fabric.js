@@ -12,7 +12,6 @@ module Twilio
           ##
           # Initialize the CallList
           # @param [Version] version Version that contains the resource
-          
           # @return [CallList] CallList
           def initialize(version)
             super(version)
@@ -34,7 +33,6 @@ module Twilio
           # @param [Version] version Version that contains the resource
           # @param [Response] response Response from the API
           # @param [Hash] solution Path solution for the resource
-          
           # @return [CallPage] CallPage
           def initialize(version, response, solution)
             super(version, response)
@@ -46,7 +44,6 @@ module Twilio
           ##
           # Build an instance of CallInstance
           # @param [Hash] payload Payload response from the API
-          
           # @return [CallInstance] CallInstance
           def get_instance(payload)
             return CallInstance.new(
@@ -67,7 +64,6 @@ module Twilio
           # Initialize the CallInstance
           # @param [Version] version Version that contains the resource
           # @param [Hash] payload payload that contains response from Twilio
-          
           # @return [CallInstance] CallInstance
           def initialize(version, payload)
             super(version)
@@ -77,21 +73,21 @@ module Twilio
           # Access the events
           # @return [events] events
           def events
-            @context.events
+            context.events
           end
           
           ##
           # Access the metrics
           # @return [metrics] metrics
           def metrics
-            @context.metrics
+            context.metrics
           end
           
           ##
           # Access the summary
           # @return [summary] summary
           def summary
-            @context.summary
+            context.summary
           end
           
           ##

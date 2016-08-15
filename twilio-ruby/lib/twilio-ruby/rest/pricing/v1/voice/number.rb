@@ -13,7 +13,6 @@ module Twilio
             ##
             # Initialize the NumberList
             # @param [Version] version Version that contains the resource
-            
             # @return [NumberList] NumberList
             def initialize(version)
               super(version)
@@ -35,7 +34,6 @@ module Twilio
             # @param [Version] version Version that contains the resource
             # @param [Response] response Response from the API
             # @param [Hash] solution Path solution for the resource
-            
             # @return [NumberPage] NumberPage
             def initialize(version, response, solution)
               super(version, response)
@@ -47,7 +45,6 @@ module Twilio
             ##
             # Build an instance of NumberInstance
             # @param [Hash] payload Payload response from the API
-            
             # @return [NumberInstance] NumberInstance
             def get_instance(payload)
               return NumberInstance.new(
@@ -68,7 +65,6 @@ module Twilio
             # Initialize the NumberContext
             # @param [Version] version Version that contains the resource
             # @param [String] number The number
-            
             # @return [NumberContext] NumberContext
             def initialize(version, number)
               super(version)
@@ -95,7 +91,7 @@ module Twilio
               return NumberInstance.new(
                   @version,
                   payload,
-                  number: @solution['number'],
+                  number: @solution[:number],
               )
             end
             
@@ -113,7 +109,6 @@ module Twilio
             # @param [Version] version Version that contains the resource
             # @param [Hash] payload payload that contains response from Twilio
             # @param [String] number The number
-            
             # @return [NumberInstance] NumberInstance
             def initialize(version, payload, number: nil)
               super(version)
@@ -140,7 +135,6 @@ module Twilio
             # Generate an instance context for the instance, the context is capable of
             # performing various actions.  All instance actions are proxied to the context
             # @param [Version] version Version that contains the resource
-            
             # @return [NumberContext] NumberContext for this NumberInstance
             def context
               unless @instance_context
@@ -184,14 +178,14 @@ module Twilio
             # Fetch a NumberInstance
             # @return [NumberInstance] Fetched NumberInstance
             def fetch
-              @context.fetch()
+              context.fetch
             end
             
             ##
             # Provide a user friendly representation
             def to_s
-              context = @params.map{|k, v| "#{k}: #{v}"}.join(" ")
-              "<Twilio.Pricing.V1.NumberInstance #{context}>"
+              values = @params.map{|k, v| "#{k}: #{v}"}.join(" ")
+              "<Twilio.Pricing.V1.NumberInstance #{values}>"
             end
           end
         end

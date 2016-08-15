@@ -14,7 +14,6 @@ module Twilio
             # Initialize the NotificationList
             # @param [Version] version Version that contains the resource
             # @param [String] service_sid The service_sid
-            
             # @return [NotificationList] NotificationList
             def initialize(version, service_sid: nil)
               super(version)
@@ -32,7 +31,7 @@ module Twilio
             # @param [String] identity The identity
             # @param [String] tag The tag
             # @param [String] body The body
-            # @param [String] priority The priority
+            # @param [notification.Priority] priority The priority
             # @param [String] ttl The ttl
             # @param [String] title The title
             # @param [String] sound The sound
@@ -40,9 +39,10 @@ module Twilio
             # @param [String] data The data
             # @param [String] apn The apn
             # @param [String] gcm The gcm
-            
+            # @param [String] sms The sms
+            # @param [Hash] facebook_messenger The facebook_messenger
             # @return [NotificationInstance] Newly created NotificationInstance
-            def create(identity: nil, tag: nil, body: nil, priority: nil, ttl: nil, title: nil, sound: nil, action: nil, data: nil, apn: nil, gcm: nil)
+            def create(identity: nil, tag: nil, body: nil, priority: nil, ttl: nil, title: nil, sound: nil, action: nil, data: nil, apn: nil, gcm: nil, sms: nil, facebook_messenger: nil)
               data = {
                   'Identity' => identity,
                   'Tag' => tag,
@@ -55,6 +55,8 @@ module Twilio
                   'Data' => data,
                   'Apn' => apn,
                   'Gcm' => gcm,
+                  'Sms' => sms,
+                  'FacebookMessenger' => facebook_messenger,
               }
               
               payload = @version.create(
@@ -66,7 +68,7 @@ module Twilio
               return NotificationInstance.new(
                   @version,
                   payload,
-                  service_sid: @solution['service_sid'],
+                  service_sid: @solution[:service_sid],
               )
             end
             
@@ -84,7 +86,6 @@ module Twilio
             # @param [Response] response Response from the API
             # @param [Hash] solution Path solution for the resource
             # @param [String] service_sid The service_sid
-            
             # @return [NotificationPage] NotificationPage
             def initialize(version, response, solution)
               super(version, response)
@@ -96,13 +97,12 @@ module Twilio
             ##
             # Build an instance of NotificationInstance
             # @param [Hash] payload Payload response from the API
-            
             # @return [NotificationInstance] NotificationInstance
             def get_instance(payload)
               return NotificationInstance.new(
                   @version,
                   payload,
-                  service_sid: @solution['service_sid'],
+                  service_sid: @solution[:service_sid],
               )
             end
             
@@ -119,7 +119,6 @@ module Twilio
             # @param [Version] version Version that contains the resource
             # @param [Hash] payload payload that contains response from Twilio
             # @param [String] service_sid The service_sid
-            
             # @return [NotificationInstance] NotificationInstance
             def initialize(version, payload, service_sid: nil)
               super(version)
@@ -141,6 +140,8 @@ module Twilio
                   'data' => payload['data'],
                   'apn' => payload['apn'],
                   'gcm' => payload['gcm'],
+                  'sms' => payload['sms'],
+                  'facebook_messenger' => payload['facebook_messenger'],
               }
             end
             
@@ -202,6 +203,14 @@ module Twilio
             
             def gcm
               @properties['gcm']
+            end
+            
+            def sms
+              @properties['sms']
+            end
+            
+            def facebook_messenger
+              @properties['facebook_messenger']
             end
             
             ##

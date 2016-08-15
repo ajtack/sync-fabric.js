@@ -12,7 +12,6 @@ module Twilio
           ##
           # Initialize the ServiceList
           # @param [Version] version Version that contains the resource
-          
           # @return [ServiceList] ServiceList
           def initialize(version)
             super(version)
@@ -28,17 +27,20 @@ module Twilio
           # @param [String] friendly_name The friendly_name
           # @param [String] apn_credential_sid The apn_credential_sid
           # @param [String] gcm_credential_sid The gcm_credential_sid
+          # @param [String] messaging_service_sid The messaging_service_sid
+          # @param [String] facebook_messenger_page_id The facebook_messenger_page_id
           # @param [String] default_apn_notification_protocol_version The
           #   default_apn_notification_protocol_version
           # @param [String] default_gcm_notification_protocol_version The
           #   default_gcm_notification_protocol_version
-          
           # @return [ServiceInstance] Newly created ServiceInstance
-          def create(friendly_name: nil, apn_credential_sid: nil, gcm_credential_sid: nil, default_apn_notification_protocol_version: nil, default_gcm_notification_protocol_version: nil)
+          def create(friendly_name: nil, apn_credential_sid: nil, gcm_credential_sid: nil, messaging_service_sid: nil, facebook_messenger_page_id: nil, default_apn_notification_protocol_version: nil, default_gcm_notification_protocol_version: nil)
             data = {
                 'FriendlyName' => friendly_name,
                 'ApnCredentialSid' => apn_credential_sid,
                 'GcmCredentialSid' => gcm_credential_sid,
+                'MessagingServiceSid' => messaging_service_sid,
+                'FacebookMessengerPageId' => facebook_messenger_page_id,
                 'DefaultApnNotificationProtocolVersion' => default_apn_notification_protocol_version,
                 'DefaultGcmNotificationProtocolVersion' => default_gcm_notification_protocol_version,
             }
@@ -66,7 +68,6 @@ module Twilio
           #  the default value of 50 records.  If no page_size is                      defined
           #  but a limit is defined, stream() will attempt to read                      the
           #  limit with the most efficient page size,                      i.e. min(limit, 1000)
-          
           # @return [Array] Array of up to limit results
           def list(friendly_name: nil, limit: nil, page_size: nil)
             self.stream(
@@ -87,7 +88,6 @@ module Twilio
           #  the default value of 50 records.                      If no page_size is defined
           #                       but a limit is defined, stream() will attempt to                      read the
           #  limit with the most efficient page size,                       i.e. min(limit, 1000)
-          
           # @return [Enumerable] Enumerable that will yield up to limit results
           def stream(friendly_name: nil, limit: nil, page_size: nil)
             limits = @version.read_limits(limit, page_size)
@@ -130,7 +130,6 @@ module Twilio
           # @param [String] page_token PageToken provided by the API
           # @param [Integer] page_number Page Number, this value is simply for client state
           # @param [Integer] page_size Number of records to return, defaults to 50
-          
           # @return [Page] Page of ServiceInstance
           def page(friendly_name: nil, page_token: nil, page_number: nil, page_size: nil)
             params = {
@@ -160,7 +159,6 @@ module Twilio
           # @param [Version] version Version that contains the resource
           # @param [Response] response Response from the API
           # @param [Hash] solution Path solution for the resource
-          
           # @return [ServicePage] ServicePage
           def initialize(version, response, solution)
             super(version, response)
@@ -172,7 +170,6 @@ module Twilio
           ##
           # Build an instance of ServiceInstance
           # @param [Hash] payload Payload response from the API
-          
           # @return [ServiceInstance] ServiceInstance
           def get_instance(payload)
             return ServiceInstance.new(
@@ -193,7 +190,6 @@ module Twilio
           # Initialize the ServiceContext
           # @param [Version] version Version that contains the resource
           # @param [String] sid The sid
-          
           # @return [ServiceContext] ServiceContext
           def initialize(version, sid)
             super(version)
@@ -231,7 +227,7 @@ module Twilio
             return ServiceInstance.new(
                 @version,
                 payload,
-                sid: @solution['sid'],
+                sid: @solution[:sid],
             )
           end
           
@@ -240,17 +236,20 @@ module Twilio
           # @param [String] friendly_name The friendly_name
           # @param [String] apn_credential_sid The apn_credential_sid
           # @param [String] gcm_credential_sid The gcm_credential_sid
+          # @param [String] messaging_service_sid The messaging_service_sid
+          # @param [String] facebook_messenger_page_id The facebook_messenger_page_id
           # @param [String] default_apn_notification_protocol_version The
           #   default_apn_notification_protocol_version
           # @param [String] default_gcm_notification_protocol_version The
           #   default_gcm_notification_protocol_version
-          
           # @return [ServiceInstance] Updated ServiceInstance
-          def update(friendly_name: nil, apn_credential_sid: nil, gcm_credential_sid: nil, default_apn_notification_protocol_version: nil, default_gcm_notification_protocol_version: nil)
+          def update(friendly_name: nil, apn_credential_sid: nil, gcm_credential_sid: nil, messaging_service_sid: nil, facebook_messenger_page_id: nil, default_apn_notification_protocol_version: nil, default_gcm_notification_protocol_version: nil)
             data = {
                 'FriendlyName' => friendly_name,
                 'ApnCredentialSid' => apn_credential_sid,
                 'GcmCredentialSid' => gcm_credential_sid,
+                'MessagingServiceSid' => messaging_service_sid,
+                'FacebookMessengerPageId' => facebook_messenger_page_id,
                 'DefaultApnNotificationProtocolVersion' => default_apn_notification_protocol_version,
                 'DefaultGcmNotificationProtocolVersion' => default_gcm_notification_protocol_version,
             }
@@ -264,7 +263,7 @@ module Twilio
             return ServiceInstance.new(
                 @version,
                 payload,
-                sid: @solution['sid'],
+                sid: @solution[:sid],
             )
           end
           
@@ -318,7 +317,6 @@ module Twilio
           # @param [Version] version Version that contains the resource
           # @param [Hash] payload payload that contains response from Twilio
           # @param [String] sid The sid
-          
           # @return [ServiceInstance] ServiceInstance
           def initialize(version, payload, sid: nil)
             super(version)
@@ -332,6 +330,8 @@ module Twilio
                 'date_updated' => Twilio.deserialize_iso8601(payload['date_updated']),
                 'apn_credential_sid' => payload['apn_credential_sid'],
                 'gcm_credential_sid' => payload['gcm_credential_sid'],
+                'messaging_service_sid' => payload['messaging_service_sid'],
+                'facebook_messenger_page_id' => payload['facebook_messenger_page_id'],
                 'default_apn_notification_protocol_version' => payload['default_apn_notification_protocol_version'],
                 'default_gcm_notification_protocol_version' => payload['default_gcm_notification_protocol_version'],
                 'url' => payload['url'],
@@ -349,7 +349,6 @@ module Twilio
           # Generate an instance context for the instance, the context is capable of
           # performing various actions.  All instance actions are proxied to the context
           # @param [Version] version Version that contains the resource
-          
           # @return [ServiceContext] ServiceContext for this ServiceInstance
           def context
             unless @instance_context
@@ -389,6 +388,14 @@ module Twilio
             @properties['gcm_credential_sid']
           end
           
+          def messaging_service_sid
+            @properties['messaging_service_sid']
+          end
+          
+          def facebook_messenger_page_id
+            @properties['facebook_messenger_page_id']
+          end
+          
           def default_apn_notification_protocol_version
             @properties['default_apn_notification_protocol_version']
           end
@@ -409,14 +416,14 @@ module Twilio
           # Deletes the ServiceInstance
           # @return [Boolean] true if delete succeeds, true otherwise
           def delete
-            @context.delete()
+            context.delete
           end
           
           ##
           # Fetch a ServiceInstance
           # @return [ServiceInstance] Fetched ServiceInstance
           def fetch
-            @context.fetch()
+            context.fetch
           end
           
           ##
@@ -424,16 +431,20 @@ module Twilio
           # @param [String] friendly_name The friendly_name
           # @param [String] apn_credential_sid The apn_credential_sid
           # @param [String] gcm_credential_sid The gcm_credential_sid
+          # @param [String] messaging_service_sid The messaging_service_sid
+          # @param [String] facebook_messenger_page_id The facebook_messenger_page_id
           # @param [String] default_apn_notification_protocol_version The
           #   default_apn_notification_protocol_version
           # @param [String] default_gcm_notification_protocol_version The
           #   default_gcm_notification_protocol_version
-          
           # @return [ServiceInstance] Updated ServiceInstance
-          def update(friendly_name: nil, apn_credential_sid: nil, gcm_credential_sid: nil, default_apn_notification_protocol_version: nil, default_gcm_notification_protocol_version: nil)
-            @context.update(
+          def update(friendly_name: nil, apn_credential_sid: nil, gcm_credential_sid: nil, messaging_service_sid: nil, facebook_messenger_page_id: nil, default_apn_notification_protocol_version: nil, default_gcm_notification_protocol_version: nil)
+            context.update(
+                friendly_name: friendly_name,
                 apn_credential_sid: apn_credential_sid,
                 gcm_credential_sid: gcm_credential_sid,
+                messaging_service_sid: messaging_service_sid,
+                facebook_messenger_page_id: facebook_messenger_page_id,
                 default_apn_notification_protocol_version: default_apn_notification_protocol_version,
                 default_gcm_notification_protocol_version: default_gcm_notification_protocol_version,
             )
@@ -443,21 +454,21 @@ module Twilio
           # Access the bindings
           # @return [bindings] bindings
           def bindings
-            @context.bindings
+            context.bindings
           end
           
           ##
           # Access the notifications
           # @return [notifications] notifications
           def notifications
-            @context.notifications
+            context.notifications
           end
           
           ##
           # Provide a user friendly representation
           def to_s
-            context = @params.map{|k, v| "#{k}: #{v}"}.join(" ")
-            "<Twilio.Notifications.V1.ServiceInstance #{context}>"
+            values = @params.map{|k, v| "#{k}: #{v}"}.join(" ")
+            "<Twilio.Notifications.V1.ServiceInstance #{values}>"
           end
         end
       end

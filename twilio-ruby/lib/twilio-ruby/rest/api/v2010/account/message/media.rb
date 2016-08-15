@@ -18,7 +18,6 @@ module Twilio
               #   media.
               # @param [String] message_sid A 34 character string that uniquely identifies this
               #   resource.
-              
               # @return [MediaList] MediaList
               def initialize(version, account_sid: nil, message_sid: nil)
                 super(version)
@@ -44,7 +43,6 @@ module Twilio
               #  the default value of 50 records.  If no page_size is                      defined
               #  but a limit is defined, stream() will attempt to read                      the
               #  limit with the most efficient page size,                      i.e. min(limit, 1000)
-              
               # @return [Array] Array of up to limit results
               def list(date_created_before: nil, date_created: nil, date_created_after: nil, limit: nil, page_size: nil)
                 self.stream(
@@ -69,7 +67,6 @@ module Twilio
               #  the default value of 50 records.                      If no page_size is defined
               #                       but a limit is defined, stream() will attempt to                      read the
               #  limit with the most efficient page size,                       i.e. min(limit, 1000)
-              
               # @return [Enumerable] Enumerable that will yield up to limit results
               def stream(date_created_before: nil, date_created: nil, date_created_after: nil, limit: nil, page_size: nil)
                 limits = @version.read_limits(limit, page_size)
@@ -118,7 +115,6 @@ module Twilio
               # @param [String] page_token PageToken provided by the API
               # @param [Integer] page_number Page Number, this value is simply for client state
               # @param [Integer] page_size Number of records to return, defaults to 50
-              
               # @return [Page] Page of MediaInstance
               def page(date_created_before: nil, date_created: nil, date_created_after: nil, page_token: nil, page_number: nil, page_size: nil)
                 params = {
@@ -154,7 +150,6 @@ module Twilio
               #   media.
               # @param [String] message_sid A 34 character string that uniquely identifies this
               #   resource.
-              
               # @return [MediaPage] MediaPage
               def initialize(version, response, solution)
                 super(version, response)
@@ -166,14 +161,13 @@ module Twilio
               ##
               # Build an instance of MediaInstance
               # @param [Hash] payload Payload response from the API
-              
               # @return [MediaInstance] MediaInstance
               def get_instance(payload)
                 return MediaInstance.new(
                     @version,
                     payload,
-                    account_sid: @solution['account_sid'],
-                    message_sid: @solution['message_sid'],
+                    account_sid: @solution[:account_sid],
+                    message_sid: @solution[:message_sid],
                 )
               end
               
@@ -191,7 +185,6 @@ module Twilio
               # @param [String] account_sid The account_sid
               # @param [String] message_sid The message_sid
               # @param [String] sid The media Sid that uniquely identifies this resource
-              
               # @return [MediaContext] MediaContext
               def initialize(version, account_sid, message_sid, sid)
                 super(version)
@@ -227,9 +220,9 @@ module Twilio
                 return MediaInstance.new(
                     @version,
                     payload,
-                    account_sid: @solution['account_sid'],
-                    message_sid: @solution['message_sid'],
-                    sid: @solution['sid'],
+                    account_sid: @solution[:account_sid],
+                    message_sid: @solution[:message_sid],
+                    sid: @solution[:sid],
                 )
               end
               
@@ -251,7 +244,6 @@ module Twilio
               # @param [String] message_sid A 34 character string that uniquely identifies this
               #   resource.
               # @param [String] sid The media Sid that uniquely identifies this resource
-              
               # @return [MediaInstance] MediaInstance
               def initialize(version, payload, account_sid: nil, message_sid: nil, sid: nil)
                 super(version)
@@ -280,7 +272,6 @@ module Twilio
               # Generate an instance context for the instance, the context is capable of
               # performing various actions.  All instance actions are proxied to the context
               # @param [Version] version Version that contains the resource
-              
               # @return [MediaContext] MediaContext for this MediaInstance
               def context
                 unless @instance_context
@@ -326,21 +317,21 @@ module Twilio
               # Deletes the MediaInstance
               # @return [Boolean] true if delete succeeds, true otherwise
               def delete
-                @context.delete()
+                context.delete
               end
               
               ##
               # Fetch a MediaInstance
               # @return [MediaInstance] Fetched MediaInstance
               def fetch
-                @context.fetch()
+                context.fetch
               end
               
               ##
               # Provide a user friendly representation
               def to_s
-                context = @params.map{|k, v| "#{k}: #{v}"}.join(" ")
-                "<Twilio.Api.V2010.MediaInstance #{context}>"
+                values = @params.map{|k, v| "#{k}: #{v}"}.join(" ")
+                "<Twilio.Api.V2010.MediaInstance #{values}>"
               end
             end
           end

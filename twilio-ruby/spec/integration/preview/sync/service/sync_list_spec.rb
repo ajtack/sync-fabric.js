@@ -12,14 +12,14 @@ describe 'SyncList' do
     
     expect {
       @client.preview.sync.services("ISaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa") \
-                          .sync_lists("sid").fetch()
+                          .sync_lists("ESaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa").fetch()
     }.to raise_exception(Twilio::REST::TwilioException)
     
     values = {}
     expect(
     @holodeck.has_request?(Holodeck::Request.new(
         method: 'get',
-        url: 'https://preview.twilio.com/Sync/Services/ISaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/Lists/sid',
+        url: 'https://preview.twilio.com/Sync/Services/ISaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/Lists/ESaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
     ))).to eq(true)
   end
 
@@ -28,14 +28,14 @@ describe 'SyncList' do
     
     expect {
       @client.preview.sync.services("ISaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa") \
-                          .sync_lists("sid").delete()
+                          .sync_lists("ESaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa").delete()
     }.to raise_exception(Twilio::REST::TwilioException)
     
     values = {}
     expect(
     @holodeck.has_request?(Holodeck::Request.new(
         method: 'delete',
-        url: 'https://preview.twilio.com/Sync/Services/ISaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/Lists/sid',
+        url: 'https://preview.twilio.com/Sync/Services/ISaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/Lists/ESaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
     ))).to eq(true)
   end
 

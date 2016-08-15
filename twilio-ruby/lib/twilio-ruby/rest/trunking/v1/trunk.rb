@@ -12,7 +12,6 @@ module Twilio
           ##
           # Initialize the TrunkList
           # @param [Version] version Version that contains the resource
-          
           # @return [TrunkList] TrunkList
           def initialize(version)
             super(version)
@@ -31,7 +30,6 @@ module Twilio
           # @param [String] disaster_recovery_method The disaster_recovery_method
           # @param [String] recording The recording
           # @param [Boolean] secure The secure
-          
           # @return [TrunkInstance] Newly created TrunkInstance
           def create(friendly_name: nil, domain_name: nil, disaster_recovery_url: nil, disaster_recovery_method: nil, recording: nil, secure: nil)
             data = {
@@ -65,7 +63,6 @@ module Twilio
           #  the default value of 50 records.  If no page_size is                      defined
           #  but a limit is defined, stream() will attempt to read                      the
           #  limit with the most efficient page size,                      i.e. min(limit, 1000)
-          
           # @return [Array] Array of up to limit results
           def list(limit: nil, page_size: nil)
             self.stream(
@@ -84,7 +81,6 @@ module Twilio
           #  the default value of 50 records.                      If no page_size is defined
           #                       but a limit is defined, stream() will attempt to                      read the
           #  limit with the most efficient page size,                       i.e. min(limit, 1000)
-          
           # @return [Enumerable] Enumerable that will yield up to limit results
           def stream(limit: nil, page_size: nil)
             limits = @version.read_limits(limit, page_size)
@@ -124,7 +120,6 @@ module Twilio
           # @param [String] page_token PageToken provided by the API
           # @param [Integer] page_number Page Number, this value is simply for client state
           # @param [Integer] page_size Number of records to return, defaults to 50
-          
           # @return [Page] Page of TrunkInstance
           def page(page_token: nil, page_number: nil, page_size: nil)
             params = {
@@ -153,7 +148,6 @@ module Twilio
           # @param [Version] version Version that contains the resource
           # @param [Response] response Response from the API
           # @param [Hash] solution Path solution for the resource
-          
           # @return [TrunkPage] TrunkPage
           def initialize(version, response, solution)
             super(version, response)
@@ -165,7 +159,6 @@ module Twilio
           ##
           # Build an instance of TrunkInstance
           # @param [Hash] payload Payload response from the API
-          
           # @return [TrunkInstance] TrunkInstance
           def get_instance(payload)
             return TrunkInstance.new(
@@ -186,7 +179,6 @@ module Twilio
           # Initialize the TrunkContext
           # @param [Version] version Version that contains the resource
           # @param [String] sid The sid
-          
           # @return [TrunkContext] TrunkContext
           def initialize(version, sid)
             super(version)
@@ -219,7 +211,7 @@ module Twilio
             return TrunkInstance.new(
                 @version,
                 payload,
-                sid: @solution['sid'],
+                sid: @solution[:sid],
             )
           end
           
@@ -238,7 +230,6 @@ module Twilio
           # @param [String] disaster_recovery_method The disaster_recovery_method
           # @param [String] recording The recording
           # @param [Boolean] secure The secure
-          
           # @return [TrunkInstance] Updated TrunkInstance
           def update(friendly_name: nil, domain_name: nil, disaster_recovery_url: nil, disaster_recovery_method: nil, recording: nil, secure: nil)
             data = {
@@ -259,7 +250,7 @@ module Twilio
             return TrunkInstance.new(
                 @version,
                 payload,
-                sid: @solution['sid'],
+                sid: @solution[:sid],
             )
           end
           
@@ -365,7 +356,6 @@ module Twilio
           # @param [Version] version Version that contains the resource
           # @param [Hash] payload payload that contains response from Twilio
           # @param [String] sid The sid
-          
           # @return [TrunkInstance] TrunkInstance
           def initialize(version, payload, sid: nil)
             super(version)
@@ -399,7 +389,6 @@ module Twilio
           # Generate an instance context for the instance, the context is capable of
           # performing various actions.  All instance actions are proxied to the context
           # @param [Version] version Version that contains the resource
-          
           # @return [TrunkContext] TrunkContext for this TrunkInstance
           def context
             unless @instance_context
@@ -471,14 +460,14 @@ module Twilio
           # Fetch a TrunkInstance
           # @return [TrunkInstance] Fetched TrunkInstance
           def fetch
-            @context.fetch()
+            context.fetch
           end
           
           ##
           # Deletes the TrunkInstance
           # @return [Boolean] true if delete succeeds, true otherwise
           def delete
-            @context.delete()
+            context.delete
           end
           
           ##
@@ -489,10 +478,10 @@ module Twilio
           # @param [String] disaster_recovery_method The disaster_recovery_method
           # @param [String] recording The recording
           # @param [Boolean] secure The secure
-          
           # @return [TrunkInstance] Updated TrunkInstance
           def update(friendly_name: nil, domain_name: nil, disaster_recovery_url: nil, disaster_recovery_method: nil, recording: nil, secure: nil)
-            @context.update(
+            context.update(
+                friendly_name: friendly_name,
                 domain_name: domain_name,
                 disaster_recovery_url: disaster_recovery_url,
                 disaster_recovery_method: disaster_recovery_method,
@@ -505,35 +494,35 @@ module Twilio
           # Access the origination_urls
           # @return [origination_urls] origination_urls
           def origination_urls
-            @context.origination_urls
+            context.origination_urls
           end
           
           ##
           # Access the credentials_lists
           # @return [credentials_lists] credentials_lists
           def credentials_lists
-            @context.credentials_lists
+            context.credentials_lists
           end
           
           ##
           # Access the ip_access_control_lists
           # @return [ip_access_control_lists] ip_access_control_lists
           def ip_access_control_lists
-            @context.ip_access_control_lists
+            context.ip_access_control_lists
           end
           
           ##
           # Access the phone_numbers
           # @return [phone_numbers] phone_numbers
           def phone_numbers
-            @context.phone_numbers
+            context.phone_numbers
           end
           
           ##
           # Provide a user friendly representation
           def to_s
-            context = @params.map{|k, v| "#{k}: #{v}"}.join(" ")
-            "<Twilio.Trunking.V1.TrunkInstance #{context}>"
+            values = @params.map{|k, v| "#{k}: #{v}"}.join(" ")
+            "<Twilio.Trunking.V1.TrunkInstance #{values}>"
           end
         end
       end

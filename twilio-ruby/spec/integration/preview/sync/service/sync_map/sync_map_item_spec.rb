@@ -12,7 +12,7 @@ describe 'SyncMapItem' do
     
     expect {
       @client.preview.sync.services("ISaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa") \
-                          .sync_maps("sid") \
+                          .sync_maps("MPaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa") \
                           .sync_map_items("key").fetch()
     }.to raise_exception(Twilio::REST::TwilioException)
     
@@ -20,7 +20,7 @@ describe 'SyncMapItem' do
     expect(
     @holodeck.has_request?(Holodeck::Request.new(
         method: 'get',
-        url: 'https://preview.twilio.com/Sync/Services/ISaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/Maps/map_sid/Items/key',
+        url: 'https://preview.twilio.com/Sync/Services/ISaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/Maps/MPaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/Items/key',
     ))).to eq(true)
   end
 
@@ -29,7 +29,7 @@ describe 'SyncMapItem' do
     
     expect {
       @client.preview.sync.services("ISaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa") \
-                          .sync_maps("sid") \
+                          .sync_maps("MPaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa") \
                           .sync_map_items("key").delete()
     }.to raise_exception(Twilio::REST::TwilioException)
     
@@ -37,7 +37,7 @@ describe 'SyncMapItem' do
     expect(
     @holodeck.has_request?(Holodeck::Request.new(
         method: 'delete',
-        url: 'https://preview.twilio.com/Sync/Services/ISaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/Maps/map_sid/Items/key',
+        url: 'https://preview.twilio.com/Sync/Services/ISaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/Maps/MPaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/Items/key',
     ))).to eq(true)
   end
 
@@ -46,7 +46,7 @@ describe 'SyncMapItem' do
     
     expect {
       @client.preview.sync.services("ISaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa") \
-                          .sync_maps("sid") \
+                          .sync_maps("MPaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa") \
                           .sync_map_items.create(key: "key", data: "{}")
     }.to raise_exception(Twilio::REST::TwilioException)
     
@@ -57,7 +57,7 @@ describe 'SyncMapItem' do
     expect(
     @holodeck.has_request?(Holodeck::Request.new(
         method: 'post',
-        url: 'https://preview.twilio.com/Sync/Services/ISaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/Maps/map_sid/Items',
+        url: 'https://preview.twilio.com/Sync/Services/ISaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/Maps/MPaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/Items',
         data: values,
     ))).to eq(true)
   end
@@ -67,7 +67,7 @@ describe 'SyncMapItem' do
     
     expect {
       @client.preview.sync.services("ISaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa") \
-                          .sync_maps("sid") \
+                          .sync_maps("MPaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa") \
                           .sync_map_items.list()
     }.to raise_exception(Twilio::REST::TwilioException)
     
@@ -75,7 +75,7 @@ describe 'SyncMapItem' do
     expect(
     @holodeck.has_request?(Holodeck::Request.new(
         method: 'get',
-        url: 'https://preview.twilio.com/Sync/Services/ISaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/Maps/map_sid/Items',
+        url: 'https://preview.twilio.com/Sync/Services/ISaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/Maps/MPaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/Items',
     ))).to eq(true)
   end
 
@@ -84,7 +84,7 @@ describe 'SyncMapItem' do
     
     expect {
       @client.preview.sync.services("ISaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa") \
-                          .sync_maps("sid") \
+                          .sync_maps("MPaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa") \
                           .sync_map_items("key").update(data: "{}")
     }.to raise_exception(Twilio::REST::TwilioException)
     
@@ -94,7 +94,7 @@ describe 'SyncMapItem' do
     expect(
     @holodeck.has_request?(Holodeck::Request.new(
         method: 'post',
-        url: 'https://preview.twilio.com/Sync/Services/ISaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/Maps/map_sid/Items/key',
+        url: 'https://preview.twilio.com/Sync/Services/ISaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/Maps/MPaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/Items/key',
         data: values,
     ))).to eq(true)
   end

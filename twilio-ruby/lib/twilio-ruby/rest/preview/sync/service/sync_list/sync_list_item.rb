@@ -16,7 +16,6 @@ module Twilio
               # @param [Version] version Version that contains the resource
               # @param [String] service_sid The service_sid
               # @param [String] list_sid The list_sid
-              
               # @return [SyncListItemList] SyncListItemList
               def initialize(version, service_sid: nil, list_sid: nil)
                 super(version)
@@ -33,7 +32,6 @@ module Twilio
               # Retrieve a single page of SyncListItemInstance records from the API.
               # Request is executed immediately.
               # @param [Hash] data The data
-              
               # @return [SyncListItemInstance] Newly created SyncListItemInstance
               def create(data: nil)
                 data = {
@@ -49,8 +47,8 @@ module Twilio
                 return SyncListItemInstance.new(
                     @version,
                     payload,
-                    service_sid: @solution['service_sid'],
-                    list_sid: @solution['list_sid'],
+                    service_sid: @solution[:service_sid],
+                    list_sid: @solution[:list_sid],
                 )
               end
               
@@ -58,26 +56,21 @@ module Twilio
               # Lists SyncListItemInstance records from the API as a list.
               # Unlike stream(), this operation is eager and will load `limit` records into
               # memory before returning.
-              # @param [sync_list_item.QueryDirection] direction The direction
               # @param [sync_list_item.QueryResultOrder] order The order
               # @param [String] from The from
               # @param [sync_list_item.QueryFromBoundType] bounds The bounds
-              # @param [Boolean] exclude_data The exclude_data
               # @param [Integer] limit Upper limit for the number of records to return. stream()
               #                   guarantees to never return more than limit.  Default is no limit
               # @param [Integer] page_size Number of records to fetch per request, when not set will                      use
               #  the default value of 50 records.  If no page_size is                      defined
               #  but a limit is defined, stream() will attempt to read                      the
               #  limit with the most efficient page size,                      i.e. min(limit, 1000)
-              
               # @return [Array] Array of up to limit results
-              def list(direction: nil, order: nil, from: nil, bounds: nil, exclude_data: nil, limit: nil, page_size: nil)
+              def list(order: nil, from: nil, bounds: nil, limit: nil, page_size: nil)
                 self.stream(
-                    direction: direction,
                     order: order,
                     from: from,
                     bounds: bounds,
-                    exclude_data: exclude_data,
                     limit: limit,
                     page_size: page_size
                 ).entries
@@ -87,43 +80,36 @@ module Twilio
               # Streams SyncListItemInstance records from the API as an Enumerable.
               # This operation lazily loads records as efficiently as possible until the limit
               # is reached.
-              # @param [sync_list_item.QueryDirection] direction The direction
               # @param [sync_list_item.QueryResultOrder] order The order
               # @param [String] from The from
               # @param [sync_list_item.QueryFromBoundType] bounds The bounds
-              # @param [Boolean] exclude_data The exclude_data
               # @param [Integer] limit Upper limit for the number of records to return.                  stream()
               #  guarantees to never return more than limit.                  Default is no limit
               # @param [Integer] page_size Number of records to fetch per request, when                      not set will use
               #  the default value of 50 records.                      If no page_size is defined
               #                       but a limit is defined, stream() will attempt to                      read the
               #  limit with the most efficient page size,                       i.e. min(limit, 1000)
-              
               # @return [Enumerable] Enumerable that will yield up to limit results
-              def stream(direction: nil, order: nil, from: nil, bounds: nil, exclude_data: nil, limit: nil, page_size: nil)
+              def stream(order: nil, from: nil, bounds: nil, limit: nil, page_size: nil)
                 limits = @version.read_limits(limit, page_size)
                 
                 page = self.page(
-                    direction: direction,
                     order: order,
                     from: from,
                     bounds: bounds,
-                    exclude_data: exclude_data,
-                    page_size: limits['page_size'],
+                    page_size: limits[:page_size],
                 )
                 
-                @version.stream(page, limit: limits['limit'], page_limit: limits['page_limit'])
+                @version.stream(page, limit: limits[:limit], page_limit: limits[:page_limit])
               end
               
               ##
               # When passed a block, yields SyncListItemInstance records from the API.
               # This operation lazily loads records as efficiently as possible until the limit
               # is reached.
-              # @param [sync_list_item.QueryDirection] direction The direction
               # @param [sync_list_item.QueryResultOrder] order The order
               # @param [String] from The from
               # @param [sync_list_item.QueryFromBoundType] bounds The bounds
-              # @param [Boolean] exclude_data The exclude_data
               # @param [Integer] limit Upper limit for the number of records to return.                  stream()
               #  guarantees to never return more than limit.                  Default is no limit
               # @param [Integer] page_size Number of records to fetch per request, when                       not set will use
@@ -134,34 +120,29 @@ module Twilio
                 limits = @version.read_limits
                 
                 page = self.page(
-                    page_size: limits['page_size'],
+                    page_size: limits[:page_size],
                 )
                 
                 @version.stream(page,
-                                limit: limits['limit'],
-                                page_limit: limits['page_limit']).each {|x| yield x}
+                                limit: limits[:limit],
+                                page_limit: limits[:page_limit]).each {|x| yield x}
               end
               
               ##
               # Retrieve a single page of SyncListItemInstance records from the API.
               # Request is executed immediately.
-              # @param [sync_list_item.QueryDirection] direction The direction
               # @param [sync_list_item.QueryResultOrder] order The order
               # @param [String] from The from
               # @param [sync_list_item.QueryFromBoundType] bounds The bounds
-              # @param [Boolean] exclude_data The exclude_data
               # @param [String] page_token PageToken provided by the API
               # @param [Integer] page_number Page Number, this value is simply for client state
               # @param [Integer] page_size Number of records to return, defaults to 50
-              
               # @return [Page] Page of SyncListItemInstance
-              def page(direction: nil, order: nil, from: nil, bounds: nil, exclude_data: nil, page_token: nil, page_number: nil, page_size: nil)
+              def page(order: nil, from: nil, bounds: nil, page_token: nil, page_number: nil, page_size: nil)
                 params = {
-                    'Direction' => direction,
                     'Order' => order,
                     'From' => from,
                     'Bounds' => bounds,
-                    'ExcludeData' => exclude_data,
                     'PageToken' => page_token,
                     'Page' => page_number,
                     'PageSize' => page_size,
@@ -189,7 +170,6 @@ module Twilio
               # @param [Hash] solution Path solution for the resource
               # @param [String] service_sid The service_sid
               # @param [String] list_sid The list_sid
-              
               # @return [SyncListItemPage] SyncListItemPage
               def initialize(version, response, solution)
                 super(version, response)
@@ -201,14 +181,13 @@ module Twilio
               ##
               # Build an instance of SyncListItemInstance
               # @param [Hash] payload Payload response from the API
-              
               # @return [SyncListItemInstance] SyncListItemInstance
               def get_instance(payload)
                 return SyncListItemInstance.new(
                     @version,
                     payload,
-                    service_sid: @solution['service_sid'],
-                    list_sid: @solution['list_sid'],
+                    service_sid: @solution[:service_sid],
+                    list_sid: @solution[:list_sid],
                 )
               end
               
@@ -226,7 +205,6 @@ module Twilio
               # @param [String] service_sid The service_sid
               # @param [String] list_sid The list_sid
               # @param [String] index The index
-              
               # @return [SyncListItemContext] SyncListItemContext
               def initialize(version, service_sid, list_sid, index)
                 super(version)
@@ -255,9 +233,9 @@ module Twilio
                 return SyncListItemInstance.new(
                     @version,
                     payload,
-                    service_sid: @solution['service_sid'],
-                    list_sid: @solution['list_sid'],
-                    index: @solution['index'],
+                    service_sid: @solution[:service_sid],
+                    list_sid: @solution[:list_sid],
+                    index: @solution[:index],
                 )
               end
               
@@ -271,7 +249,6 @@ module Twilio
               ##
               # Update the SyncListItemInstance
               # @param [Hash] data The data
-              
               # @return [SyncListItemInstance] Updated SyncListItemInstance
               def update(data: nil)
                 data = {
@@ -287,9 +264,9 @@ module Twilio
                 return SyncListItemInstance.new(
                     @version,
                     payload,
-                    service_sid: @solution['service_sid'],
-                    list_sid: @solution['list_sid'],
-                    index: @solution['index'],
+                    service_sid: @solution[:service_sid],
+                    list_sid: @solution[:list_sid],
+                    index: @solution[:index],
                 )
               end
               
@@ -309,7 +286,6 @@ module Twilio
               # @param [String] service_sid The service_sid
               # @param [String] list_sid The list_sid
               # @param [String] index The index
-              
               # @return [SyncListItemInstance] SyncListItemInstance
               def initialize(version, payload, service_sid: nil, list_sid: nil, index: nil)
                 super(version)
@@ -341,7 +317,6 @@ module Twilio
               # Generate an instance context for the instance, the context is capable of
               # performing various actions.  All instance actions are proxied to the context
               # @param [Version] version Version that contains the resource
-              
               # @return [SyncListItemContext] SyncListItemContext for this SyncListItemInstance
               def context
                 unless @instance_context
@@ -399,30 +374,31 @@ module Twilio
               # Fetch a SyncListItemInstance
               # @return [SyncListItemInstance] Fetched SyncListItemInstance
               def fetch
-                @context.fetch()
+                context.fetch
               end
               
               ##
               # Deletes the SyncListItemInstance
               # @return [Boolean] true if delete succeeds, true otherwise
               def delete
-                @context.delete()
+                context.delete
               end
               
               ##
               # Update the SyncListItemInstance
               # @param [Hash] data The data
-              
               # @return [SyncListItemInstance] Updated SyncListItemInstance
               def update(data: nil)
-                @context.update()
+                context.update(
+                    data: data,
+                )
               end
               
               ##
               # Provide a user friendly representation
               def to_s
-                context = @params.map{|k, v| "#{k}: #{v}"}.join(" ")
-                "<Twilio.Preview.Sync.SyncListItemInstance #{context}>"
+                values = @params.map{|k, v| "#{k}: #{v}"}.join(" ")
+                "<Twilio.Preview.Sync.SyncListItemInstance #{values}>"
               end
             end
           end

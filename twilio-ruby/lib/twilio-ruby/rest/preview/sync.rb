@@ -12,7 +12,7 @@ module Twilio
         # Initialize the Sync version of Preview
         def initialize(domain)
           super
-          @version = 'sync'
+          @version = 'Sync'
           @services = nil
         end
         
@@ -27,7 +27,7 @@ module Twilio
         ##
         # Provide a user friendly representation
         def to_s
-          #<Twilio::REST::Preview::Sync>
+          '<Twilio::REST::Preview::Sync>'
         end
       end
     end

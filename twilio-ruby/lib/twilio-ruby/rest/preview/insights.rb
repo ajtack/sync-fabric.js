@@ -27,7 +27,7 @@ module Twilio
         ##
         # Provide a user friendly representation
         def to_s
-          #<Twilio::REST::Preview::Insights>
+          '<Twilio::REST::Preview::Insights>'
         end
       end
     end

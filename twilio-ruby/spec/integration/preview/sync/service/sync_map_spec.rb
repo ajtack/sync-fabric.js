@@ -12,14 +12,14 @@ describe 'SyncMap' do
     
     expect {
       @client.preview.sync.services("ISaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa") \
-                          .sync_maps("sid").fetch()
+                          .sync_maps("MPaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa").fetch()
     }.to raise_exception(Twilio::REST::TwilioException)
     
     values = {}
     expect(
     @holodeck.has_request?(Holodeck::Request.new(
         method: 'get',
-        url: 'https://preview.twilio.com/Sync/Services/ISaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/Maps/sid',
+        url: 'https://preview.twilio.com/Sync/Services/ISaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/Maps/MPaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
     ))).to eq(true)
   end
 
@@ -28,14 +28,14 @@ describe 'SyncMap' do
     
     expect {
       @client.preview.sync.services("ISaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa") \
-                          .sync_maps("sid").delete()
+                          .sync_maps("MPaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa").delete()
     }.to raise_exception(Twilio::REST::TwilioException)
     
     values = {}
     expect(
     @holodeck.has_request?(Holodeck::Request.new(
         method: 'delete',
-        url: 'https://preview.twilio.com/Sync/Services/ISaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/Maps/sid',
+        url: 'https://preview.twilio.com/Sync/Services/ISaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/Maps/MPaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
     ))).to eq(true)
   end
 

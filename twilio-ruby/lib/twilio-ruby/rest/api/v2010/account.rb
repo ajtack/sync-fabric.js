@@ -12,7 +12,6 @@ module Twilio
           ##
           # Initialize the AccountList
           # @param [Version] version Version that contains the resource
-          
           # @return [AccountList] AccountList
           def initialize(version)
             super(version)
@@ -27,7 +26,6 @@ module Twilio
           # Request is executed immediately.
           # @param [String] friendly_name A human readable description of the account to
           #   create, defaults to `SubAccount Created at {YYYY-MM-DD HH:MM meridian}`
-          
           # @return [AccountInstance] Newly created AccountInstance
           def create(friendly_name: nil)
             data = {
@@ -59,7 +57,6 @@ module Twilio
           #  the default value of 50 records.  If no page_size is                      defined
           #  but a limit is defined, stream() will attempt to read                      the
           #  limit with the most efficient page size,                      i.e. min(limit, 1000)
-          
           # @return [Array] Array of up to limit results
           def list(friendly_name: nil, status: nil, limit: nil, page_size: nil)
             self.stream(
@@ -83,7 +80,6 @@ module Twilio
           #  the default value of 50 records.                      If no page_size is defined
           #                       but a limit is defined, stream() will attempt to                      read the
           #  limit with the most efficient page size,                       i.e. min(limit, 1000)
-          
           # @return [Enumerable] Enumerable that will yield up to limit results
           def stream(friendly_name: nil, status: nil, limit: nil, page_size: nil)
             limits = @version.read_limits(limit, page_size)
@@ -131,7 +127,6 @@ module Twilio
           # @param [String] page_token PageToken provided by the API
           # @param [Integer] page_number Page Number, this value is simply for client state
           # @param [Integer] page_size Number of records to return, defaults to 50
-          
           # @return [Page] Page of AccountInstance
           def page(friendly_name: nil, status: nil, page_token: nil, page_number: nil, page_size: nil)
             params = {
@@ -162,7 +157,6 @@ module Twilio
           # @param [Version] version Version that contains the resource
           # @param [Response] response Response from the API
           # @param [Hash] solution Path solution for the resource
-          
           # @return [AccountPage] AccountPage
           def initialize(version, response, solution)
             super(version, response)
@@ -174,7 +168,6 @@ module Twilio
           ##
           # Build an instance of AccountInstance
           # @param [Hash] payload Payload response from the API
-          
           # @return [AccountInstance] AccountInstance
           def get_instance(payload)
             return AccountInstance.new(
@@ -196,7 +189,6 @@ module Twilio
           # @param [Version] version Version that contains the resource
           # @param [String] sid The Account Sid that uniquely identifies the account to
           #   fetch
-          
           # @return [AccountContext] AccountContext
           def initialize(version, sid)
             super(version)
@@ -216,12 +208,16 @@ module Twilio
             @conferences = nil
             @connect_apps = nil
             @incoming_phone_numbers = nil
+            @keys = nil
             @messages = nil
+            @new_keys = nil
+            @new_signing_keys = nil
             @notifications = nil
             @outgoing_caller_ids = nil
             @queues = nil
             @recordings = nil
             @sandbox = nil
+            @signing_keys = nil
             @sip = nil
             @sms = nil
             @tokens = nil
@@ -245,7 +241,7 @@ module Twilio
             return AccountInstance.new(
                 @version,
                 payload,
-                sid: @solution['sid'],
+                sid: @solution[:sid],
             )
           end
           
@@ -255,7 +251,6 @@ module Twilio
           #   Account
           # @param [account.Status] status Alter the status of this account with a given
           #   Status
-          
           # @return [AccountInstance] Updated AccountInstance
           def update(friendly_name: nil, status: nil)
             data = {
@@ -272,7 +267,7 @@ module Twilio
             return AccountInstance.new(
                 @version,
                 payload,
-                sid: @solution['sid'],
+                sid: @solution[:sid],
             )
           end
           
@@ -453,6 +448,28 @@ module Twilio
           end
           
           ##
+          # Access the keys
+          # @return [KeyList] KeyList
+          def keys(sid=:unset)
+            if sid != :unset
+              return KeyContext.new(
+                  @version,
+                  @solution[:sid],
+                  sid,
+              )
+            end
+            
+            unless @keys
+              @keys = KeyList.new(
+                  @version,
+                  account_sid: @solution[:sid],
+              )
+            end
+            
+            @keys
+          end
+          
+          ##
           # Access the messages
           # @return [MessageList] MessageList
           def messages(sid=:unset)
@@ -472,6 +489,34 @@ module Twilio
             end
             
             @messages
+          end
+          
+          ##
+          # Access the new_keys
+          # @return [NewKeyList] NewKeyList
+          def new_keys
+            unless @new_keys
+              @new_keys = NewKeyList.new(
+                  @version,
+                  account_sid: @solution[:sid],
+              )
+            end
+            
+            @new_keys
+          end
+          
+          ##
+          # Access the new_signing_keys
+          # @return [NewSigningKeyList] NewSigningKeyList
+          def new_signing_keys
+            unless @new_signing_keys
+              @new_signing_keys = NewSigningKeyList.new(
+                  @version,
+                  account_sid: @solution[:sid],
+              )
+            end
+            
+            @new_signing_keys
           end
           
           ##
@@ -570,6 +615,28 @@ module Twilio
                 @version,
                 @solution[:sid],
             )
+          end
+          
+          ##
+          # Access the signing_keys
+          # @return [SigningKeyList] SigningKeyList
+          def signing_keys(sid=:unset)
+            if sid != :unset
+              return SigningKeyContext.new(
+                  @version,
+                  @solution[:sid],
+                  sid,
+              )
+            end
+            
+            unless @signing_keys
+              @signing_keys = SigningKeyList.new(
+                  @version,
+                  account_sid: @solution[:sid],
+              )
+            end
+            
+            @signing_keys
           end
           
           ##
@@ -679,7 +746,6 @@ module Twilio
           # @param [Hash] payload payload that contains response from Twilio
           # @param [String] sid The Account Sid that uniquely identifies the account to
           #   fetch
-          
           # @return [AccountInstance] AccountInstance
           def initialize(version, payload, sid: nil)
             super(version)
@@ -709,7 +775,6 @@ module Twilio
           # Generate an instance context for the instance, the context is capable of
           # performing various actions.  All instance actions are proxied to the context
           # @param [Version] version Version that contains the resource
-          
           # @return [AccountContext] AccountContext for this AccountInstance
           def context
             unless @instance_context
@@ -765,7 +830,7 @@ module Twilio
           # Fetch a AccountInstance
           # @return [AccountInstance] Fetched AccountInstance
           def fetch
-            @context.fetch()
+            context.fetch
           end
           
           ##
@@ -774,10 +839,10 @@ module Twilio
           #   Account
           # @param [account.Status] status Alter the status of this account with a given
           #   Status
-          
           # @return [AccountInstance] Updated AccountInstance
           def update(friendly_name: nil, status: nil)
-            @context.update(
+            context.update(
+                friendly_name: friendly_name,
                 status: status,
             )
           end
@@ -786,147 +851,175 @@ module Twilio
           # Access the addresses
           # @return [addresses] addresses
           def addresses
-            @context.addresses
+            context.addresses
           end
           
           ##
           # Access the applications
           # @return [applications] applications
           def applications
-            @context.applications
+            context.applications
           end
           
           ##
           # Access the authorized_connect_apps
           # @return [authorized_connect_apps] authorized_connect_apps
           def authorized_connect_apps
-            @context.authorized_connect_apps
+            context.authorized_connect_apps
           end
           
           ##
           # Access the available_phone_numbers
           # @return [available_phone_numbers] available_phone_numbers
           def available_phone_numbers
-            @context.available_phone_numbers
+            context.available_phone_numbers
           end
           
           ##
           # Access the calls
           # @return [calls] calls
           def calls
-            @context.calls
+            context.calls
           end
           
           ##
           # Access the conferences
           # @return [conferences] conferences
           def conferences
-            @context.conferences
+            context.conferences
           end
           
           ##
           # Access the connect_apps
           # @return [connect_apps] connect_apps
           def connect_apps
-            @context.connect_apps
+            context.connect_apps
           end
           
           ##
           # Access the incoming_phone_numbers
           # @return [incoming_phone_numbers] incoming_phone_numbers
           def incoming_phone_numbers
-            @context.incoming_phone_numbers
+            context.incoming_phone_numbers
+          end
+          
+          ##
+          # Access the keys
+          # @return [keys] keys
+          def keys
+            context.keys
           end
           
           ##
           # Access the messages
           # @return [messages] messages
           def messages
-            @context.messages
+            context.messages
+          end
+          
+          ##
+          # Access the new_keys
+          # @return [new_keys] new_keys
+          def new_keys
+            context.new_keys
+          end
+          
+          ##
+          # Access the new_signing_keys
+          # @return [new_signing_keys] new_signing_keys
+          def new_signing_keys
+            context.new_signing_keys
           end
           
           ##
           # Access the notifications
           # @return [notifications] notifications
           def notifications
-            @context.notifications
+            context.notifications
           end
           
           ##
           # Access the outgoing_caller_ids
           # @return [outgoing_caller_ids] outgoing_caller_ids
           def outgoing_caller_ids
-            @context.outgoing_caller_ids
+            context.outgoing_caller_ids
           end
           
           ##
           # Access the queues
           # @return [queues] queues
           def queues
-            @context.queues
+            context.queues
           end
           
           ##
           # Access the recordings
           # @return [recordings] recordings
           def recordings
-            @context.recordings
+            context.recordings
           end
           
           ##
           # Access the sandbox
           # @return [sandbox] sandbox
           def sandbox
-            @context.sandbox
+            context.sandbox
+          end
+          
+          ##
+          # Access the signing_keys
+          # @return [signing_keys] signing_keys
+          def signing_keys
+            context.signing_keys
           end
           
           ##
           # Access the sip
           # @return [sip] sip
           def sip
-            @context.sip
+            context.sip
           end
           
           ##
           # Access the sms
           # @return [sms] sms
           def sms
-            @context.sms
+            context.sms
           end
           
           ##
           # Access the tokens
           # @return [tokens] tokens
           def tokens
-            @context.tokens
+            context.tokens
           end
           
           ##
           # Access the transcriptions
           # @return [transcriptions] transcriptions
           def transcriptions
-            @context.transcriptions
+            context.transcriptions
           end
           
           ##
           # Access the usage
           # @return [usage] usage
           def usage
-            @context.usage
+            context.usage
           end
           
           ##
           # Access the validation_requests
           # @return [validation_requests] validation_requests
           def validation_requests
-            @context.validation_requests
+            context.validation_requests
           end
           
           ##
           # Provide a user friendly representation
           def to_s
-            context = @params.map{|k, v| "#{k}: #{v}"}.join(" ")
-            "<Twilio.Api.V2010.AccountInstance #{context}>"
+            values = @params.map{|k, v| "#{k}: #{v}"}.join(" ")
+            "<Twilio.Api.V2010.AccountInstance #{values}>"
           end
         end
       end

@@ -17,15 +17,9 @@ module Twilio
         @port = 443
         
         # Versions
-        @insights = nil
         @sync = nil
         @wireless = nil
-      end
-      
-      ##
-      # Version insights of preview
-      def insights
-        @insights ||= Insights.new self
+        @insights = nil
       end
       
       ##
@@ -40,8 +34,10 @@ module Twilio
         @wireless ||= Wireless.new self
       end
       
-      def calls
-        self.insights.calls
+      ##
+      # Version insights of preview
+      def insights
+        @insights ||= Insights.new self
       end
       
       def services
@@ -58,6 +54,10 @@ module Twilio
       
       def rate_plans
         self.wireless.rate_plans
+      end
+      
+      def calls
+        self.insights.calls
       end
       
       ##

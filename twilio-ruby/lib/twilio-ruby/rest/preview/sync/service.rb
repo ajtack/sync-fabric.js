@@ -12,7 +12,6 @@ module Twilio
           ##
           # Initialize the ServiceList
           # @param [Version] version Version that contains the resource
-          
           # @return [ServiceList] ServiceList
           def initialize(version)
             super(version)
@@ -27,7 +26,6 @@ module Twilio
           # Request is executed immediately.
           # @param [String] friendly_name The friendly_name
           # @param [String] webhook_url The webhook_url
-          
           # @return [ServiceInstance] Newly created ServiceInstance
           def create(friendly_name: nil, webhook_url: nil)
             data = {
@@ -57,7 +55,6 @@ module Twilio
           #  the default value of 50 records.  If no page_size is                      defined
           #  but a limit is defined, stream() will attempt to read                      the
           #  limit with the most efficient page size,                      i.e. min(limit, 1000)
-          
           # @return [Array] Array of up to limit results
           def list(limit: nil, page_size: nil)
             self.stream(
@@ -76,16 +73,15 @@ module Twilio
           #  the default value of 50 records.                      If no page_size is defined
           #                       but a limit is defined, stream() will attempt to                      read the
           #  limit with the most efficient page size,                       i.e. min(limit, 1000)
-          
           # @return [Enumerable] Enumerable that will yield up to limit results
           def stream(limit: nil, page_size: nil)
             limits = @version.read_limits(limit, page_size)
             
             page = self.page(
-                page_size: limits['page_size'],
+                page_size: limits[:page_size],
             )
             
-            @version.stream(page, limit: limits['limit'], page_limit: limits['page_limit'])
+            @version.stream(page, limit: limits[:limit], page_limit: limits[:page_limit])
           end
           
           ##
@@ -102,12 +98,12 @@ module Twilio
             limits = @version.read_limits
             
             page = self.page(
-                page_size: limits['page_size'],
+                page_size: limits[:page_size],
             )
             
             @version.stream(page,
-                            limit: limits['limit'],
-                            page_limit: limits['page_limit']).each {|x| yield x}
+                            limit: limits[:limit],
+                            page_limit: limits[:page_limit]).each {|x| yield x}
           end
           
           ##
@@ -116,7 +112,6 @@ module Twilio
           # @param [String] page_token PageToken provided by the API
           # @param [Integer] page_number Page Number, this value is simply for client state
           # @param [Integer] page_size Number of records to return, defaults to 50
-          
           # @return [Page] Page of ServiceInstance
           def page(page_token: nil, page_number: nil, page_size: nil)
             params = {
@@ -145,7 +140,6 @@ module Twilio
           # @param [Version] version Version that contains the resource
           # @param [Response] response Response from the API
           # @param [Hash] solution Path solution for the resource
-          
           # @return [ServicePage] ServicePage
           def initialize(version, response, solution)
             super(version, response)
@@ -157,7 +151,6 @@ module Twilio
           ##
           # Build an instance of ServiceInstance
           # @param [Hash] payload Payload response from the API
-          
           # @return [ServiceInstance] ServiceInstance
           def get_instance(payload)
             return ServiceInstance.new(
@@ -178,7 +171,6 @@ module Twilio
           # Initialize the ServiceContext
           # @param [Version] version Version that contains the resource
           # @param [String] sid The sid
-          
           # @return [ServiceContext] ServiceContext
           def initialize(version, sid)
             super(version)
@@ -210,7 +202,7 @@ module Twilio
             return ServiceInstance.new(
                 @version,
                 payload,
-                sid: @solution['sid'],
+                sid: @solution[:sid],
             )
           end
           
@@ -225,7 +217,6 @@ module Twilio
           # Update the ServiceInstance
           # @param [String] webhook_url The webhook_url
           # @param [String] friendly_name The friendly_name
-          
           # @return [ServiceInstance] Updated ServiceInstance
           def update(webhook_url: nil, friendly_name: nil)
             data = {
@@ -242,7 +233,7 @@ module Twilio
             return ServiceInstance.new(
                 @version,
                 payload,
-                sid: @solution['sid'],
+                sid: @solution[:sid],
             )
           end
           
@@ -326,7 +317,6 @@ module Twilio
           # @param [Version] version Version that contains the resource
           # @param [Hash] payload payload that contains response from Twilio
           # @param [String] sid The sid
-          
           # @return [ServiceInstance] ServiceInstance
           def initialize(version, payload, sid: nil)
             super(version)
@@ -354,7 +344,6 @@ module Twilio
           # Generate an instance context for the instance, the context is capable of
           # performing various actions.  All instance actions are proxied to the context
           # @param [Version] version Version that contains the resource
-          
           # @return [ServiceContext] ServiceContext for this ServiceInstance
           def context
             unless @instance_context
@@ -402,24 +391,24 @@ module Twilio
           # Fetch a ServiceInstance
           # @return [ServiceInstance] Fetched ServiceInstance
           def fetch
-            @context.fetch()
+            context.fetch
           end
           
           ##
           # Deletes the ServiceInstance
           # @return [Boolean] true if delete succeeds, true otherwise
           def delete
-            @context.delete()
+            context.delete
           end
           
           ##
           # Update the ServiceInstance
           # @param [String] webhook_url The webhook_url
           # @param [String] friendly_name The friendly_name
-          
           # @return [ServiceInstance] Updated ServiceInstance
           def update(webhook_url: nil, friendly_name: nil)
-            @context.update(
+            context.update(
+                webhook_url: webhook_url,
                 friendly_name: friendly_name,
             )
           end
@@ -428,28 +417,28 @@ module Twilio
           # Access the documents
           # @return [documents] documents
           def documents
-            @context.documents
+            context.documents
           end
           
           ##
           # Access the sync_lists
           # @return [sync_lists] sync_lists
           def sync_lists
-            @context.sync_lists
+            context.sync_lists
           end
           
           ##
           # Access the sync_maps
           # @return [sync_maps] sync_maps
           def sync_maps
-            @context.sync_maps
+            context.sync_maps
           end
           
           ##
           # Provide a user friendly representation
           def to_s
-            context = @params.map{|k, v| "#{k}: #{v}"}.join(" ")
-            "<Twilio.Preview.Sync.ServiceInstance #{context}>"
+            values = @params.map{|k, v| "#{k}: #{v}"}.join(" ")
+            "<Twilio.Preview.Sync.ServiceInstance #{values}>"
           end
         end
       end

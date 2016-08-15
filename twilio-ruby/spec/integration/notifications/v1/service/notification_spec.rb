@@ -44,7 +44,9 @@ describe 'Notification' do
           "action": null,
           "data": null,
           "apn": null,
-          "gcm": null
+          "gcm": null,
+          "sms": null,
+          "facebook_messenger": null
       }
       ]
     ))

@@ -12,7 +12,7 @@ describe 'SyncListItem' do
     
     expect {
       @client.preview.sync.services("ISaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa") \
-                          .sync_lists("sid") \
+                          .sync_lists("ESaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa") \
                           .sync_list_items(1).fetch()
     }.to raise_exception(Twilio::REST::TwilioException)
     
@@ -20,7 +20,7 @@ describe 'SyncListItem' do
     expect(
     @holodeck.has_request?(Holodeck::Request.new(
         method: 'get',
-        url: 'https://preview.twilio.com/Sync/Services/ISaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/Lists/list_sid/Items/1',
+        url: 'https://preview.twilio.com/Sync/Services/ISaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/Lists/ESaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/Items/1',
     ))).to eq(true)
   end
 
@@ -29,7 +29,7 @@ describe 'SyncListItem' do
     
     expect {
       @client.preview.sync.services("ISaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa") \
-                          .sync_lists("sid") \
+                          .sync_lists("ESaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa") \
                           .sync_list_items(1).delete()
     }.to raise_exception(Twilio::REST::TwilioException)
     
@@ -37,7 +37,7 @@ describe 'SyncListItem' do
     expect(
     @holodeck.has_request?(Holodeck::Request.new(
         method: 'delete',
-        url: 'https://preview.twilio.com/Sync/Services/ISaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/Lists/list_sid/Items/1',
+        url: 'https://preview.twilio.com/Sync/Services/ISaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/Lists/ESaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/Items/1',
     ))).to eq(true)
   end
 
@@ -46,7 +46,7 @@ describe 'SyncListItem' do
     
     expect {
       @client.preview.sync.services("ISaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa") \
-                          .sync_lists("sid") \
+                          .sync_lists("ESaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa") \
                           .sync_list_items.create(data: "{}")
     }.to raise_exception(Twilio::REST::TwilioException)
     
@@ -56,7 +56,7 @@ describe 'SyncListItem' do
     expect(
     @holodeck.has_request?(Holodeck::Request.new(
         method: 'post',
-        url: 'https://preview.twilio.com/Sync/Services/ISaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/Lists/list_sid/Items',
+        url: 'https://preview.twilio.com/Sync/Services/ISaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/Lists/ESaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/Items',
         data: values,
     ))).to eq(true)
   end
@@ -66,7 +66,7 @@ describe 'SyncListItem' do
     
     expect {
       @client.preview.sync.services("ISaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa") \
-                          .sync_lists("sid") \
+                          .sync_lists("ESaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa") \
                           .sync_list_items.list()
     }.to raise_exception(Twilio::REST::TwilioException)
     
@@ -74,7 +74,7 @@ describe 'SyncListItem' do
     expect(
     @holodeck.has_request?(Holodeck::Request.new(
         method: 'get',
-        url: 'https://preview.twilio.com/Sync/Services/ISaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/Lists/list_sid/Items',
+        url: 'https://preview.twilio.com/Sync/Services/ISaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/Lists/ESaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/Items',
     ))).to eq(true)
   end
 
@@ -83,7 +83,7 @@ describe 'SyncListItem' do
     
     expect {
       @client.preview.sync.services("ISaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa") \
-                          .sync_lists("sid") \
+                          .sync_lists("ESaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa") \
                           .sync_list_items(1).update(data: "{}")
     }.to raise_exception(Twilio::REST::TwilioException)
     
@@ -93,7 +93,7 @@ describe 'SyncListItem' do
     expect(
     @holodeck.has_request?(Holodeck::Request.new(
         method: 'post',
-        url: 'https://preview.twilio.com/Sync/Services/ISaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/Lists/list_sid/Items/1',
+        url: 'https://preview.twilio.com/Sync/Services/ISaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/Lists/ESaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/Items/1',
         data: values,
     ))).to eq(true)
   end

@@ -14,7 +14,6 @@ module Twilio
             # Initialize the SummaryList
             # @param [Version] version Version that contains the resource
             # @param [String] sid The sid
-            
             # @return [SummaryList] SummaryList
             def initialize(version, sid: nil)
               super(version)
@@ -39,7 +38,6 @@ module Twilio
             # @param [Response] response Response from the API
             # @param [Hash] solution Path solution for the resource
             # @param [String] sid The sid
-            
             # @return [SummaryPage] SummaryPage
             def initialize(version, response, solution)
               super(version, response)
@@ -51,13 +49,12 @@ module Twilio
             ##
             # Build an instance of SummaryInstance
             # @param [Hash] payload Payload response from the API
-            
             # @return [SummaryInstance] SummaryInstance
             def get_instance(payload)
               return SummaryInstance.new(
                   @version,
                   payload,
-                  sid: @solution['sid'],
+                  sid: @solution[:sid],
               )
             end
             
@@ -73,7 +70,6 @@ module Twilio
             # Initialize the SummaryContext
             # @param [Version] version Version that contains the resource
             # @param [String] call_sid The call_sid
-            
             # @return [SummaryContext] SummaryContext
             def initialize(version, call_sid)
               super(version)
@@ -100,7 +96,7 @@ module Twilio
               return SummaryInstance.new(
                   @version,
                   payload,
-                  call_sid: @solution['call_sid'],
+                  call_sid: @solution[:call_sid],
               )
             end
             
@@ -119,7 +115,6 @@ module Twilio
             # @param [Hash] payload payload that contains response from Twilio
             # @param [String] sid The sid
             # @param [String] call_sid The call_sid
-            
             # @return [SummaryInstance] SummaryInstance
             def initialize(version, payload, sid: nil, call_sid: nil)
               super(version)
@@ -146,7 +141,6 @@ module Twilio
             # Generate an instance context for the instance, the context is capable of
             # performing various actions.  All instance actions are proxied to the context
             # @param [Version] version Version that contains the resource
-            
             # @return [SummaryContext] SummaryContext for this SummaryInstance
             def context
               unless @instance_context
@@ -186,14 +180,14 @@ module Twilio
             # Fetch a SummaryInstance
             # @return [SummaryInstance] Fetched SummaryInstance
             def fetch
-              @context.fetch()
+              context.fetch
             end
             
             ##
             # Provide a user friendly representation
             def to_s
-              context = @params.map{|k, v| "#{k}: #{v}"}.join(" ")
-              "<Twilio.Preview.Insights.SummaryInstance #{context}>"
+              values = @params.map{|k, v| "#{k}: #{v}"}.join(" ")
+              "<Twilio.Preview.Insights.SummaryInstance #{values}>"
             end
           end
         end
