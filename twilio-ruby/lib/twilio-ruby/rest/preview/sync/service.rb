@@ -416,22 +416,22 @@ module Twilio
           ##
           # Access the documents
           # @return [documents] documents
-          def documents
-            context.documents
+          def documents(sid=:unset)
+            context.documents(sid)
           end
           
           ##
           # Access the sync_lists
           # @return [sync_lists] sync_lists
-          def sync_lists
-            context.sync_lists
+          def sync_lists(sid=:unset)
+            context.sync_lists(sid)
           end
           
           ##
           # Access the sync_maps
           # @return [sync_maps] sync_maps
-          def sync_maps
-            context.sync_maps
+          def sync_maps(sid=:unset)
+            context.sync_maps(sid)
           end
           
           ##
