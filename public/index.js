@@ -34,7 +34,7 @@ $(function () {
 
     //This code will create and/or open a Sync document
     //Note the use of promises
-    syncClient.document('sync.game').then(function(doc) {
+    syncClient.document('SyncGame').then(function(doc) {
       //Lets store it in our global variable
       syncDoc = doc;
 
