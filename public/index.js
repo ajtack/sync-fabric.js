@@ -93,7 +93,7 @@ $(function () {
 
                       // "add" rectangle onto canvas
           canvas.add(rect2);
-          let secondRect = map.set(rect2.id, _.extend(_.pick(rect2, ['top', 'left', 'height', 'width', 'fill']), {'type': 'rectangle'}));
+          let secondRect = map.set(rect2.id, _.extend(_.pick(rect2, ['top', 'left', 'angle', 'height', 'width', 'fill', 'scaleX', 'scaleY']), {'type': 'rectangle'}));
 
           Promise.all([firstRect, secondRect], function() {
             configureSyncing(map, canvas);
@@ -112,7 +112,6 @@ $(function () {
   function configureSyncing(map, canvas) {
     map.on('itemUpdated', function(it) {
       let canvasItem = it.value
-      console.log(it.key, "mutated remotely to", canvasItem);
       thisRect = canvas.getItemByName(it.key);
 
       const animation = {
@@ -122,16 +121,16 @@ $(function () {
       };
       thisRect.animate('left', canvasItem.left, animation);
       thisRect.animate('top', canvasItem.top, animation);
-      thisRect.animate('height', canvasItem.height, animation);
-      thisRect.animate('width', canvasItem.width, animation);
+      thisRect.animate('angle', canvasItem.angle, animation)
+      thisRect.animate('scaleX', canvasItem.scaleX, animation);
+      thisRect.animate('scaleY', canvasItem.scaleY, animation);
     });
 
     canvas.on('object:modified', function (evt) {
-      let newValue = _.pick(evt.target, ['top', 'left', 'height', 'width', 'fill']);
+      let newValue = _.pick(evt.target, ['top', 'left', 'angle', 'scaleX', 'scaleY']);
       map.mutate(evt.target.id, function(rectangleInMap) {
         return _.extend(rectangleInMap, newValue);
       });
-      console.log(evt.target.id, "mutated locally to", newValue);
     });
   }
 
