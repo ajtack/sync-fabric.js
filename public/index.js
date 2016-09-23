@@ -12,21 +12,31 @@ $(function () {
   //synchronisation primitive, for this demo
   var syncDoc;
 
+  fabric.Canvas.prototype.getItemByName = function(name) {
+    var object = null,
+        objects = this.getObjects();
+
+    for (var i = 0, len = this.size(); i < len; i++) {
+      if (objects[i].id && objects[i].id === name) {
+        object = objects[i];
+        break;
+      }
+    }
+
+    return object;
+  };
+
   var canvas = new fabric.Canvas('theWhiteboard');
   canvas.setHeight(500);
   canvas.setWidth(800);
-  
-  // create a rectangle object
-  var rect = new fabric.Rect({
-    left: 100,
-    top: 100,
-    fill: 'red',
-    width: 20,
-    height: 20
-  });
 
-  // "add" rectangle onto canvas
-  canvas.add(rect);
+  canvas.on('object:added', function(evt) {
+      console.log(evt)
+  })
+
+  canvas.on('object:modified', function (evt) {
+      console.log(evt);
+  });
 
   //Get an access token for the current user, passing a device ID
   //In browser-based apps, every tab is like its own unique device
@@ -44,23 +54,86 @@ $(function () {
 
     //This code will create and/or open a Sync document
     //Note the use of promises
-    syncClient.document('SyncGame').then(function(doc) {
+    syncClient.map('theWhiteboard').then(function(map) {
       //Lets store it in our global variable
-      syncDoc = doc;
+      map.on("itemAdded", function(e) { console.log('ItemAdded', e); });
 
       //Initialize game board UI to current state (if it exists)
-      var data = syncDoc.get();
-      if (data.board) {
-        updateUserInterface(data);
-      }
+      map.getItems().then(function(page) {
+        if (page.items.length == 0) {
+          //
+          // BOOTSTRAP
+          //
+          // create a rectangle object
+          let rect1 = new fabric.Rect({
+            id: "dog",
+            left: 100,
+            top: 100,
+            fill: 'red',
+            width: 20,
+            height: 20
+          });
 
-      //Let's subscribe to changes on this document, so when something
-      //changes on this document, we can trigger our UI to update
-      syncDoc.on('updated', updateUserInterface);
+          // "add" rectangle onto canvas
+          canvas.add(rect1);
+          let firstRect = map.set(rect1.id, _.pick(rect1, ['top', 'left', 'height', 'width', 'fill']));
 
+          // create a rectangle object
+          let rect2 = new fabric.Rect({
+            id: "penis",
+            left: 200,
+            top: 100,
+            fill: 'red',
+            width: 20,
+            height: 20
+          });
+
+          // "add" rectangle onto canvas
+          canvas.add(rect2);
+
+                      // "add" rectangle onto canvas
+          canvas.add(rect2);
+          let secondRect = map.set(rect2.id, _.extend(_.pick(rect2, ['top', 'left', 'height', 'width', 'fill']), {'type': 'rectangle'}));
+
+          Promise.all([firstRect, secondRect], function() {
+            configureSyncing(map, canvas);
+          })
+        } else {
+          _.map(page.items, function(item) {
+            canvas.add(new fabric.Rect(_.extend(item.value, {id: item.key})));
+          });
+
+          configureSyncing(map, canvas);
+        }
+      });
+    });
+  });
+
+  function configureSyncing(map, canvas) {
+    map.on('itemUpdated', function(it) {
+      let canvasItem = it.value
+      console.log(it.key, "mutated remotely to", canvasItem);
+      thisRect = canvas.getItemByName(it.key);
+
+      const animation = {
+        onChange: canvas.renderAll.bind(canvas),
+        duration: 500,
+        easing: fabric.util.ease.easeOutBounce
+      };
+      thisRect.animate('left', canvasItem.left, animation);
+      thisRect.animate('top', canvasItem.top, animation);
+      thisRect.animate('height', canvasItem.height, animation);
+      thisRect.animate('width', canvasItem.width, animation);
     });
 
-  });
+    canvas.on('object:modified', function (evt) {
+      let newValue = _.pick(evt.target, ['top', 'left', 'height', 'width', 'fill']);
+      map.mutate(evt.target.id, function(rectangleInMap) {
+        return _.extend(rectangleInMap, newValue);
+      });
+      console.log(evt.target.id, "mutated locally to", newValue);
+    });
+  }
 
   //Whenever a board button is clicked:
   $buttons.on('click', function (e) {
