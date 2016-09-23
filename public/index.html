@@ -18,23 +18,8 @@
   <section>
     <h1>Tic-Tac-Twilio</h1>
 
-    <div id="board">
-        <div class="board-row">
-            <button type="button" data-row="0" data-col="0" disabled>&nbsp;</button>
-            <button type="button" data-row="0" data-col="1" disabled>&nbsp;</button>
-            <button type="button" data-row="0" data-col="2" disabled>&nbsp;</button>
-        </div>
-        <div class="board-row">
-            <button type="button" data-row="1" data-col="0" disabled>&nbsp;</button>
-            <button type="button" data-row="1" data-col="1" disabled>&nbsp;</button>
-            <button type="button" data-row="1" data-col="2" disabled>&nbsp;</button>
-        </div>
-        <div class="board-row">
-            <button type="button" data-row="2" data-col="0" disabled>&nbsp;</button>
-            <button type="button" data-row="2" data-col="1" disabled>&nbsp;</button>
-            <button type="button" data-row="2" data-col="2" disabled>&nbsp;</button>
-        </div>
-    </div>
+    <canvas id="theWhiteboard">
+    </canvas>
 
     <div id="message">
         Welcome! Initializing Sync...
@@ -45,6 +30,7 @@
 
   <script src="//media.twiliocdn.com/sdk/js/sync/v0.5/twilio-sync.min.js"></script>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/fabric.js/1.6.4/fabric.min.js"></script>
   <script src="index.js"></script>
 </body>
 </html>

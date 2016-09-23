@@ -12,6 +12,22 @@ $(function () {
   //synchronisation primitive, for this demo
   var syncDoc;
 
+  var canvas = new fabric.Canvas('theWhiteboard');
+  canvas.setHeight(500);
+  canvas.setWidth(800);
+  
+  // create a rectangle object
+  var rect = new fabric.Rect({
+    left: 100,
+    top: 100,
+    fill: 'red',
+    width: 20,
+    height: 20
+  });
+
+  // "add" rectangle onto canvas
+  canvas.add(rect);
+
   //Get an access token for the current user, passing a device ID
   //In browser-based apps, every tab is like its own unique device
   //synchronizing state -- so we'll use a random UUID to identify
