@@ -56,15 +56,16 @@ function wireNewItemEventsBetweenMapAndCanvas(map, canvas) {
   // Events incoming from Sync //
   ///////////////////////////////
 
-  map.on('itemAdded', (it) => {
+  map.on('itemAdded', (it, isLocalEcho) => {
     // Suppresses echo: a local object, now sync'd, doesn't need to be drawn again
     //
-    if (canvas.getItemByName(it.key) == null)
+    if (! isLocalEcho)
       addRemoteItemToLocalCanvas(it, canvas);
   });
 
-  map.on('itemUpdated', (item) => {
-    updateLocalItemPerRemote(item.key, item.value, canvas);
+  map.on('itemUpdated', (item, isLocalEcho) => {
+    if (! isLocalEcho)
+      updateLocalItemPerRemote(item.key, item.value, canvas);
   });
 
 
@@ -110,8 +111,8 @@ function attachLoggingToCanvas(canvas) {
 }
 
 function attachLoggingToSyncMap(map) {
-  map.on("itemAdded",   it => { console.log('Twilio Sync: New item', it.key, 'in Sync map', it.value); });
-  map.on("itemUpdated", it => { console.log('Twilio Sync: Map item', it.key, 'updated',     it.value); });
+  map.on("itemAdded",   (it, isLocalEcho) => { console.log('Twilio Sync: Map item', it.key, 'added', isLocalEcho? 'locally' : 'remotely', it); });
+  map.on("itemUpdated", (it, isLocalEcho) => { console.log('Twilio Sync: Map item', it.key, 'updated',     isLocalEcho? 'locally' : 'remotely', it); });
 }
 //---------------------------------------------------
 
