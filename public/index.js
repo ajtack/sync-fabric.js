@@ -111,8 +111,8 @@ function attachLoggingToCanvas(canvas) {
 }
 
 function attachLoggingToSyncMap(map) {
-  map.on("itemAdded",   (it, isLocalEcho) => { console.log('Twilio Sync: Map item', it.key, 'added', isLocalEcho? 'locally' : 'remotely', it); });
-  map.on("itemUpdated", (it, isLocalEcho) => { console.log('Twilio Sync: Map item', it.key, 'updated',     isLocalEcho? 'locally' : 'remotely', it); });
+  map.on("itemAdded",   (it, isLocalEcho) => { console.log('Twilio Sync: Map item', it.key, 'added',   isLocalEcho? 'locally' : 'remotely', it); });
+  map.on("itemUpdated", (it, isLocalEcho) => { console.log('Twilio Sync: Map item', it.key, 'updated', isLocalEcho? 'locally' : 'remotely', it); });
 }
 //---------------------------------------------------
 
