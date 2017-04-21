@@ -1,3 +1,5 @@
+"use strict"
+
 $(function () {
   var canvas = new fabric.Canvas('theWhiteboard');
   canvas.setHeight(470);
@@ -8,7 +10,7 @@ $(function () {
   // Every Sync app needs a backend to provision a token. The Sync client uses this token
   // to interact directly with the Twilio Sync backend from the browser.
   //
-  $.getJSON('/token', (tokenResponse) => {
+  $.getJSON('/token', function(tokenResponse) {
 
     // Initialize the Sync client
     //
@@ -27,7 +29,7 @@ $(function () {
 
       // Load any the existing whiteboard data.
       //
-      let readPage = (page) => {
+      let readPage = function(page) {
         for (let item of page.items) {
           console.log("Twilio Sync: Loading item", item.key, item.value);
           addRemoteItemToLocalCanvas(item, canvas)
@@ -56,14 +58,14 @@ function wireNewItemEventsBetweenMapAndCanvas(map, canvas) {
   // Events incoming from Sync //
   ///////////////////////////////
 
-  map.on('itemAdded', (it, isLocalEcho) => {
+  map.on('itemAdded', function(it, isLocalEcho) {
     // Suppresses echo: a local object, now sync'd, doesn't need to be drawn again
     //
     if (! isLocalEcho)
       addRemoteItemToLocalCanvas(it, canvas);
   });
 
-  map.on('itemUpdated', (item, isLocalEcho) => {
+  map.on('itemUpdated', function(item, isLocalEcho) {
     if (! isLocalEcho)
       updateLocalItemPerRemote(item.key, item.value, canvas);
   });
@@ -73,7 +75,7 @@ function wireNewItemEventsBetweenMapAndCanvas(map, canvas) {
   // Local Fabric.js Drawing Events //
   ////////////////////////////////////
 
-  canvas.on('object:added', (evt) => {
+  canvas.on('object:added', function(evt) {
     // Suppresses echo: a remote object, now drawn locally, doesn't need to be Sync'd again.
     //
     const the_object = evt.target;
@@ -83,8 +85,8 @@ function wireNewItemEventsBetweenMapAndCanvas(map, canvas) {
     }
   });
 
-  canvas.on('object:modified', (evt) => {
-    let updateRemoteObject = (localObject) => {
+  canvas.on('object:modified', function(evt) {
+    let updateRemoteObject = function(localObject) {
       let objectData = localObject.toJSON();
       map.set(localObject.id, objectData);
     }
@@ -106,13 +108,13 @@ function wireNewItemEventsBetweenMapAndCanvas(map, canvas) {
 // Log lines, to help us understand our application
 //---------------------------------------------------
 function attachLoggingToCanvas(canvas) {
-  canvas.on('object:added',    evt => console.log("Fabric.js:", evt.target.get('type'), "added",    evt));
-  canvas.on('object:modified', evt => console.log("Fabric.js:", evt.target.get('type'), "modified", evt));
+  canvas.on('object:added',    function(evt) {console.log("Fabric.js:", evt.target.get('type'), "added",    evt)});
+  canvas.on('object:modified', function(evt) {console.log("Fabric.js:", evt.target.get('type'), "modified", evt)});
 }
 
 function attachLoggingToSyncMap(map) {
-  map.on("itemAdded",   (it, isLocalEcho) => { console.log('Twilio Sync: Map item', it.key, 'added',   isLocalEcho? 'locally' : 'remotely', it); });
-  map.on("itemUpdated", (it, isLocalEcho) => { console.log('Twilio Sync: Map item', it.key, 'updated', isLocalEcho? 'locally' : 'remotely', it); });
+  map.on("itemAdded",   function(it, isLocalEcho) { console.log('Twilio Sync: Map item', it.key, 'added',   isLocalEcho? 'locally' : 'remotely', it); });
+  map.on("itemUpdated", function(it, isLocalEcho) { console.log('Twilio Sync: Map item', it.key, 'updated', isLocalEcho? 'locally' : 'remotely', it); });
 }
 //---------------------------------------------------
 
@@ -127,7 +129,7 @@ function attachLoggingToSyncMap(map) {
 
 
 function addRemoteItemToLocalCanvas(item, canvas) {
-  fabric.util.enlivenObjects([item.value], objects => {
+  fabric.util.enlivenObjects([item.value], function(objects) {
     for(let o of objects) {
       o.set('id', item.key);
       canvas.add(o);
@@ -136,7 +138,7 @@ function addRemoteItemToLocalCanvas(item, canvas) {
 }
 
 function updateLocalItemPerRemote(itemName, remoteItemData, canvas) {
-  fabric.util.enlivenObjects([remoteItemData], ([remoteItem]) => {
+  fabric.util.enlivenObjects([remoteItemData], function(remoteItem) {
     let localDrawnItem = canvas.getItemByName(itemName);
 
     const animatedProperties = ['left', 'top', 'scaleX', 'scaleY', 'angle', 'skewX', 'skewY'];
@@ -208,7 +210,7 @@ function attachPencilButtonToCanvas(canvas) {
   canvas.freeDrawingBrush.color = colors[Math.floor(Math.random() * colors.length)];
   canvas.isDrawingMode = $('#pencil').hasClass('active');
 
-  $('#pencil').click(() => {
+  $('#pencil').click(function() {
     let self = $('#pencil');
     if (self.hasClass('active')) {
       self.removeClass('active btn-success');
